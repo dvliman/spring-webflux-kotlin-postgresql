@@ -9,8 +9,14 @@ import reactor.core.publisher.toFlux
 import reactor.core.publisher.toMono
 import java.sql.ResultSet
 
+interface IUserRepo {
+    fun createUser(req: CreateUserRequest): Mono<Int>
+    fun fetchUser(req: FetchUserRequest): Mono<User>
+    fun allUsers(): Flux<User>
+}
+
 @Component
-class UserRepo(val db: Database) {
+class UserRepo(val db: Database): IUserRepo {
 
     internal fun toParameters(req: CreateUserRequest): List<Parameter> = listOf(
         Parameter.create("name", req.name),
@@ -21,19 +27,19 @@ class UserRepo(val db: Database) {
         name    = rs.getString("name"),
         email   = rs.getString("email"))
 
-    fun createUser(req: CreateUserRequest): Mono<Int> = db
+    override fun createUser(req: CreateUserRequest): Mono<Int> = db
         .update("INSERT INTO users (name, email) VALUES (:name, :email)")
         .parameters(toParameters(req))
         .returnGeneratedKeys()
         .getAs(Int::class.java)
         .toMono()
 
-    fun fetchUser(req: FetchUserRequest): Mono<User> = db
+    override fun fetchUser(req: FetchUserRequest): Mono<User> = db
         .select("SELECT user_id, name, email FROM users WHERE user_id = ${req.user_id}")
         .get { rs -> toUser(rs) }
         .toMono()
 
-    fun allUsers(): Flux<User> = db
+    override fun allUsers(): Flux<User> = db
         .select("SELECT user_id, name, email FROM users")
         .get { rs -> toUser(rs) }
         .toFlux()
