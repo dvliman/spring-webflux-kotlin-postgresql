@@ -1,9 +1,9 @@
 package com.dvliman.demo;
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Configuration
+import org.springframework.stereotype.Component
 
-@Configuration
+@Component
 class Config {
 
     @Value("\${demo.db.url}")
