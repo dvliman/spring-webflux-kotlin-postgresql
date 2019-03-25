@@ -1,4 +1,4 @@
-##spring-webflux-kotlin-postgresql
+## spring-webflux-kotlin-postgresql
 
 An example of using Spring Webflux, Kotlin, Rxjava2-jdbc and PostgreSQL
 
