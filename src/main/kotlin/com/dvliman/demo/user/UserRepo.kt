@@ -9,14 +9,14 @@ import reactor.core.publisher.toFlux
 import reactor.core.publisher.toMono
 import java.sql.ResultSet
 
-interface IUserRepo {
+interface UserRepo {
     fun createUser(req: CreateUserRequest): Mono<Int>
     fun fetchUser(req: FetchUserRequest): Mono<User>
     fun allUsers(): Flux<User>
 }
 
 @Component
-class UserRepo(val db: Database): IUserRepo {
+class UserRepoImpl(val db: Database): UserRepo {
 
     internal fun toParameters(req: CreateUserRequest): List<Parameter> = listOf(
         Parameter.create("name", req.name),
